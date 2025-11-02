@@ -52,3 +52,21 @@ dist
 !src/leveldb/Makefile
 src/*.log
 src/makefile.unix_old
+# Build artifacts
+src/obj/
+src/slimcoind
+*.o
+*.d
+*.P
+
+# Depends build output (but keep package recipes!)
+depends/work/
+depends/sources/
+depends/built/
+depends/download/
+depends/packages/*/build-*/
+
+# Editor / OS junk
+*.swp
+.DS_Store
+depends/packages/*/.stamp_built

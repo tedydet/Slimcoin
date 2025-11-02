@@ -1,6 +1,7 @@
 # Slimcoin - Static userland build (Boost+OpenSSL static, glibc dynamic)
 
-PREFIX ?= $(HOME)/slimcoin-libs/prefix
+PREFIX = $(CURDIR)/../depends/work/stage-x86_64-linux-gnu
+#PREFIX ?= $(HOME)/slimcoin-libs/prefix
 USE_UPNP ?= 0
 
 DEFS = \
