@@ -1,4 +1,4 @@
-# Slimcoin - Fully Static Local Build
+# Slimcoin - Static userland build (Boost+OpenSSL static, glibc dynamic)
 
 PREFIX ?= $(HOME)/slimcoin-libs/prefix
 USE_UPNP ?= 0
@@ -17,32 +17,13 @@ DEFS = \
 CXXFLAGS = -O2 -std=c++11 \
   -pthread \
   -Wall -Wextra -Wno-sign-compare -Wformat-security \
-  -fstack-protector-all \
-  -D_FORTIFY_SOURCE=2 \
-  -g3
-
-# Fully static linking
-LDFLAGS = \
-  -static \
-  -L$(PREFIX)/lib
-
-BOOST_LIBS = \
-  -lboost_system -lboost_filesystem \
-  -lboost_program_options -lboost_thread
-
-CRYPTO_LIBS = -lssl -lcrypto
-DB_LIBS = -ldb_cxx
-
-BASE_LIBS = -lz -lpthread -ldl -lrt
+  -fstack-protector-all -D_FORTIFY_SOURCE=2 -g3
 
 ifeq ($(USE_UPNP),1)
-  UPNP_LIBS = -lminiupnpc
+  DEFS += -DUSE_UPNP=1
 else
-  UPNP_LIBS =
   DEFS += -DUSE_UPNP=0
 endif
-
-LIBS = $(BOOST_LIBS) $(CRYPTO_LIBS) $(DB_LIBS) $(UPNP_LIBS) $(BASE_LIBS)
 
 OBJS = \
   obj/version.o obj/checkpoints.o obj/netbase.o obj/addrman.o \
@@ -52,7 +33,16 @@ OBJS = \
   obj/noui.o obj/kernel.o obj/dcrypt.o obj/smalldata.o obj/sha256.o \
   obj/ecies.o obj/secure.o obj/kdf.o obj/script_error.o
 
-all: slimcoind
+# Local static archives (force exact .a use)
+OPENSSL_A   = $(PREFIX)/lib/libcrypto.a $(PREFIX)/lib/libssl.a
+BDB_A       = $(PREFIX)/lib/libdb_cxx.a
+BOOST_A     = $(PREFIX)/lib/libboost_system.a \
+              $(PREFIX)/lib/libboost_filesystem.a \
+              $(PREFIX)/lib/libboost_program_options.a \
+              $(PREFIX)/lib/libboost_thread.a
+UPNP_A      = $(PREFIX)/lib/libminiupnpc.a
+
+all: obj/build.h slimcoind
 
 obj/build.h: FORCE
 	@/bin/sh ../share/genbuild.sh obj/build.h
@@ -76,8 +66,33 @@ obj/secure.o: ecies/secure.c
 obj/kdf.o: ecies/kdf.c
 	$(CC) -c $(DEFS) -I$(PREFIX)/include -o $@ $<
 
+#slimcoind: $(OBJS)
+#	$(CXX) -static-libstdc++ -static-libgcc -L$(PREFIX)/lib \
+#	  -Wl,--start-group \
+#	    $(OPENSSL_A) \
+#	    $(BDB_A) \
+#	    $(BOOST_A) \
+#	    $(if $(filter 1,$(USE_UPNP)),$(UPNP_A),) \
+#	  -Wl,--end-group \
+#	  -Wl,-Bdynamic -lpthread -ldl -lrt -lz \
+#	  -o $@ $^
+
+
 slimcoind: $(OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(LIBS)
+	$(CXX) -o $@ $^ \
+	  -static-libstdc++ -static-libgcc -L$(PREFIX)/lib \
+	  -Wl,--start-group \
+	    $(PREFIX)/lib/libcrypto.a \
+	    $(PREFIX)/lib/libssl.a \
+	    $(PREFIX)/lib/libdb_cxx.a \
+	    $(PREFIX)/lib/libboost_system.a \
+	    $(PREFIX)/lib/libboost_filesystem.a \
+	    $(PREFIX)/lib/libboost_program_options.a \
+	    $(PREFIX)/lib/libboost_thread.a \
+	    $(if $(filter 1,$(USE_UPNP)),$(PREFIX)/lib/libminiupnpc.a,) \
+	  -Wl,--end-group \
+	  -Wl,-Bdynamic \
+	    -lpthread -ldl -lrt -lz
 
 clean:
 	rm -f slimcoind obj/*.o obj/*.P obj/build.h
