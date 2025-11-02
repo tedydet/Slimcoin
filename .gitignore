@@ -50,3 +50,5 @@ dist
 *.dmg
 
 !src/leveldb/Makefile
+src/*.log
+src/makefile.unix_old

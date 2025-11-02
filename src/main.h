@@ -58,7 +58,8 @@ static const int POB_TARGET_SPACING = 3;    // 3 PoW block spacing target betwee
 static const int STAKE_MIN_AGE = 60 * 60 * 24 * 7; // minimum age for coin age
 static const int STAKE_MAX_AGE = 60 * 60 * 24 * 90; // stake age of full weight
 
-#ifdef USE_UPNP
+// #ifdef USE_UPNP
+#if USE_UPNP
 static const int fHaveUPnP = true;
 #else
 static const int fHaveUPnP = false;

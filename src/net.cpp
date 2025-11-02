@@ -17,11 +17,9 @@
 #include <string.h>
 #endif
 
+// Disable UPnP completely (static build compatibility)
 #ifdef USE_UPNP
-#include <miniupnpc/miniwget.h>
-#include <miniupnpc/miniupnpc.h>
-#include <miniupnpc/upnpcommands.h>
-#include <miniupnpc/upnperrors.h>
+#undef USE_UPNP
 #endif
 
 using namespace std;
@@ -33,15 +31,13 @@ void ThreadMessageHandler2(void* parg);
 void ThreadSocketHandler2(void* parg);
 void ThreadOpenConnections2(void* parg);
 void ThreadOpenAddedConnections2(void* parg);
-#ifdef USE_UPNP
+#if USE_UPNP
 void ThreadMapPort2(void* parg);
 #endif
 void ThreadDNSAddressSeed2(void* parg);
 bool OpenNetworkConnection(const CAddress& addrConnect, bool fUseGrant = true);
 
 
-
-//
 // Global state variables
 //
 bool fClient = false;
@@ -845,7 +841,7 @@ void ThreadSocketHandler2(void* parg)
 
 
 
-#ifdef USE_UPNP
+#if USE_UPNP
 void ThreadMapPort(void* parg)
 {
     IMPLEMENT_RANDOMIZE_STACK(ThreadMapPort(parg));
@@ -1588,13 +1584,13 @@ void StartNode(void* parg)
         semOutbound = new CSemaphore(nMaxOutbound);
     }
 
-#ifdef USE_UPNP
+//#ifdef USE_UPNP
 #if USE_UPNP
     fUseUPnP = GetBoolArg("-upnp", true);
 #else
     fUseUPnP = GetBoolArg("-upnp", false);
 #endif
-#endif
+//#endif
 
     if (pnodeLocalHost == NULL)
         pnodeLocalHost = new CNode(INVALID_SOCKET, CAddress(CService("127.0.0.1", 0), nLocalServices));
