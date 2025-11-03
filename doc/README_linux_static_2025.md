@@ -23,7 +23,7 @@ sudo apt install -y build-essential git   automake autoconf libtool pkg-config  
 ## Clone the Repository
 
 ```
-git clone https://github.com/<YOUR_USERNAME>/Slimcoin.git
+git clone https://github.com/tedydet/Slimcoin.git
 cd Slimcoin
 git checkout static-linking-fix
 ```
