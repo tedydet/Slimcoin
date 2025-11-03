@@ -65,11 +65,9 @@ depends/sources/
 depends/built/
 depends/download/
 depends/packages/*/build-*/
+depends/packages/*/.stamp_built
 
 # Editor / OS junk
 *.swp
 .DS_Store
-depends/packages/*/.stamp_built
-depends/work/
-depends/sources/
-depends/packages/*/.stamp_built
+/Makefile
