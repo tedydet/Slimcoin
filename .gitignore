@@ -70,3 +70,6 @@ depends/packages/*/build-*/
 *.swp
 .DS_Store
 depends/packages/*/.stamp_built
+depends/work/
+depends/sources/
+depends/packages/*/.stamp_built
