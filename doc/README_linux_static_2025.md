@@ -17,7 +17,7 @@ Install minimal development tools:
 
 ```
 sudo apt update
-sudo apt install -y build-essential git   automake autoconf libtool pkg-config   curl wget
+sudo apt install -y build-essential git   automake autoconf libtool pkg-config curl wget
 ```
 
 ## Clone the Repository
