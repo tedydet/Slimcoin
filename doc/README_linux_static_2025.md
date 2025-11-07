@@ -9,7 +9,7 @@ The build process uses private static copies of the required dependencies:
 - miniUPnPc 1.6
 
 No system-wide library installations are required.
-The resulting binary can run on most modern Linux servers without additional packages.
+The resulting binary can run on most modern Linux systems without additional packages. However, it requires gcc-12. gcc-14 is not supported at the moment.
 
 ## Requirements
 
@@ -17,7 +17,9 @@ Install minimal development tools:
 
 ```
 sudo apt update
-sudo apt install -y build-essential git   automake autoconf libtool pkg-config curl wget
+```
+```
+sudo apt install -y build-essential git automake autoconf libtool pkg-config curl wget zlib1g-dev
 ```
 
 ## Clone the Repository
