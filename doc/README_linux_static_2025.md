@@ -34,8 +34,15 @@ The project uses the `depends/` system to build static vendor libraries:
 
 ```
 cd depends
-make -j$(nproc)
-cd ..
+
+# Berkeley DB 4.8
+make -C packages/db4 db4_stage
+
+# Boost
+make -C packages/boost boost_stage
+
+# miniupnpc
+make -C packages/miniupnpc miniupnpc_stage
 ```
 
 The static libraries are installed into:
@@ -46,7 +53,7 @@ depends/work/stage-x86_64-linux-gnu/lib/
 ## Build Slimcoin Daemon
 
 ```
-cd src
+cd ../src
 make -f makefile.unix USE_UPNP=0 -j$(nproc)
 ```
 
