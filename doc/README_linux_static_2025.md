@@ -38,6 +38,9 @@ cd depends
 # Berkeley DB 4.8
 make -C packages/db4 db4_stage
 
+# open-ssl 1.0.2u
+make -C packages/openssl openssl_stage
+
 # Boost
 make -C packages/boost boost_stage
 
